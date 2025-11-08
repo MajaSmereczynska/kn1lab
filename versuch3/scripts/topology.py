@@ -21,6 +21,11 @@ class MyTopo(Topo):
 
         nas = self.addHost('nas', ip='10.0.1.2/29')
 
+        # new devices
+        burak = self.addHost('burak', ip='10.0.2.2/25')
+        sw2 = self.addSwitch('sw2')
+        r2 = self.addHost('r2', ip='10.0.2.1/25')
+
         # create switch
         sw1 = self.addSwitch('sw1')
 
@@ -37,13 +42,18 @@ class MyTopo(Topo):
         # - nas over router to switch
         self.addLink(r1, sw1)
         self.addLink(nas, r1)
+        # - new devices
+        self.addLink(burak, sw2)
+        self.addLink(r2, sw2)
+        # - router1 to router2
+        self.addLink(r1, r2)
 
 
 # configuration
 def conf(network):
     # router addresses
     network['r1'].cmd('ip addr add 10.0.0.1/26 dev r1-eth0')
-    network['r1'].cmd('ip addr add 10.0.2.1/29 dev r1-eth1')
+    network['r1'].cmd('ip addr add 10.0.1.1/29 dev r1-eth1') # 10.0.2.1/29 -> 10.0.1.1/29
     network['r1'].cmd('sysctl net.ipv4.conf.all.forwarding=1')
 
     # client routing
@@ -55,7 +65,17 @@ def conf(network):
 
     network['nas'].cmd('ip route add default via 10.0.1.1')
 
+    # task 2
+    network['r1'].cmd('ip addr add 10.0.1.64/31 dev r1-eth2')
+    network['r1'].cmd('ip route add 10.0.2.0/25 via 10.0.1.65')
 
+    network['r2'].cmd('ip addr add 10.0.2.1/25 dev r2-eth0')
+    network['r2'].cmd('ip addr add 10.0.1.65/31 dev r2-eth1')
+    network['r2'].cmd('sysctl net.ipv4.conf.all.forwarding=1')
+
+    network['r2'].cmd('ip route add 10.0.1.0/29 via 10.0.1.64')
+
+    network['burak'].cmd('ip route add default via 10.0.2.1')
 def nettopo(**kwargs):
     topo = MyTopo()
     return Mininet(topo=topo, link=TCLink, controller = None, switch = LinuxBridge, **kwargs)
