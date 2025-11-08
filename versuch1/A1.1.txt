@@ -1,0 +1,93 @@
+1. Der E-Mail-Header (Kopfzeilen)
+
+MIME-Version: 1.0
+Date: Fri, 17 Mar 2018 10:27:32 +0100
+Message-ID: <CALF+2OV=..._@mail.gmail.com>
+Subject: Vorfall X84F7IU6
+From: Marcel Tannenbaum <marciT@gmail.com>
+To: Michelle Braun <michelle.braun@HUK-COBURG.de>
+Content-Type: multipart/mixed; boundary="000000000000c3cfe2058538473b"
+
+Aufgabe: Dies sind die "Metadaten" der E-Mail, vergleichbar mit dem Umschlag eines Briefes.
+Bestandteile:
+MIME-Version: Sagt dem E-Mail-Programm: "Achtung, ich bin eine MIME-Nachricht (Multipurpose Internet Mail Extensions)."
+Date, Message-ID, Subject, From, To: Datum, Eindeutige ID, Betreff, Absender, Empfänger.
+Content-Type: multipart/mixed:
+multipart/mixed: Sagt dem Programm, dass die E-Mail aus mehreren Teilen besteht, die "gemischt" sind (z.B. Text und Anhänge).
+boundary="...": Definiert eine einzigartige Trennlinie (hier 000000000000c3cfe2058538473b). Alles in der E-Mail wird durch diese Linie in seine Bestandteile zerlegt.
+
+2. Der Nachrichten-Hauptteil (Der "Body"-Container)
+
+Der erste Block nach der Trennlinie ist der eigentliche Inhalt der Nachricht.
+--000000000000c3cfe2058538473b
+Content-Type: multipart/alternative; boundary="000000000000c3cfdd0585384739"
+
+Aufgabe: Dieser Block ist selbst wieder ein Container.
+Content-Type: multipart/alternative: Sagt dem E-Mail-Programm: "Ich enthalte mehrere alternative Versionen derselben Nachricht. Bitte zeige dem Benutzer die beste Version an, die du kannst (z.B. HTML bevorzugt vor reinem Text)."
+boundary="...": Definiert eine neue, innere Trennlinie (...4739) nur für diese alternativen Versionen.
+
+2a. Die Reintext-Version (text/plain)
+
+--000000000000c3cfdd0585384739
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Sehr geehrte Frau Braun,
+...
+Mit freundlichen Gr=C3=BC=C3=9Fen
+...
+
+Aufgabe: Dies ist die "Fallback"-Version der E-Mail für Clients, die kein HTML anzeigen können (z.B. sehr alte Programme oder Smartwatches).
+Content-Transfer-Encoding: quoted-printable: Eine Methode, um Sonderzeichen (wie Umlaute) sicher zu versenden. Gr=C3=BC=C3=9Fen ist die kodierte Form von "Grüßen".
+
+2b. Die HTML-Version (text/html)
+
+--000000000000c3cfdd0585384739
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Sehr geehrte Frau Braun,<div><br></div>...
+<b>Marcel Tannenbaum</b>...
+</div>
+
+Aufgabe: Dies ist die "schöne" Version der E-Mail, die Formatierungen wie Fett (<b>), Zeilenumbrüche (<br>) und Schriftarten erlaubt. Die meisten E-Mail-Clients zeigen diese Version an.
+
+--000000000000c3cfdd0585384739--: Die innere Trennlinie mit -- am Ende. Dies schließt den multipart/alternative-Block ab.
+
+3. Die Anhänge (Attachments)
+
+Jetzt geht es im äußeren Container (multipart/mixed 000000000000c3cfe2058538473b) weiter.
+
+3a. Anhang 1 (Bild)
+
+--000000000000c3cfe2058538473b
+Content-Type: image/jpeg; name="photo_2018-03-16_17-48-04.jpg"
+Content-Disposition: attachment; filename="..."
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_jttv53tb0
+Content-ID: <f_jttv53tb0>
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/... (gekürzt)
+
+Aufgabe: Dies ist der erste Anhang.
+Content-Type: image/jpeg: Sagt dem Programm, dass es sich um ein JPEG-Bild handelt.
+Content-Disposition: attachment: Weist das Programm an, dies als herunterladbaren Anhang (Datei) zu behandeln.
+Content-Transfer-Encoding: base64: Eine Kodierungsmethode, um binäre Daten (wie ein Bild) in reinen Text (den langen Zeichensalat) umzuwandeln, damit sie sicher per E-Mail versendet werden können.
+X-Attachment-Id: f_jttv53tb0: Dies ist ein Nicht-Standard-Header. Das X- Präfix bedeutet, dass es sich um einen benutzerdefinierten Header handelt, der nicht Teil der offiziellen E-Mail-Regeln ist. Da die E-Mail von @gmail.com stammt, ist dies eine interne ID, die von Gmail verwendet wird. Sie hilft dem Gmail-System, den Anhang zu verfolgen, z. B. um die Datei, die wir hochgeladen haben, mit dem E-Mail-Entwurf zu verknüpfen, den wir gerade geschrieben haben.
+Content-ID: <f_jttv53tb0>: Dies ist ein Standard-MIME-Header. Er gibt diesem speziellen Anhang (dem ersten Bild) einen eindeutigen Namen oder eine ID innerhalb der E-Mail. Der Hauptzweck ist es, anderen Teilen der E-Mail zu ermöglichen, diesen Anhang zu referenzieren (darauf zu verweisen).
+/9j/4AAQSkZ...: Das ist der (gekürzte) Inhalt des Bildes, kodiert als Base64-Text.
+
+3b. Anhang 2 (Bild)
+
+--000000000000c3cfe2058538473b
+Content-Type: image/jpeg; name="photo_2018-03-16_17-48-12.jpg"
+... (gleicher Aufbau wie Anhang 1) ...
+/9j/4AAQSkZJRgABAQEAYABgAAD/... (gekürzt)
+
+Aufgabe: Der zweite Anhang, strukturell identisch zum ersten.
+
+4. Das Ende der Nachricht
+
+--000000000000c3cfe2058538473b--
+
+Aufgabe: Dies ist die äußere Trennlinie (aus Schritt 1) mit zwei Strichen (--) am Ende. Sie signalisiert dem E-Mail-Programm: "Die gesamte Nachricht ist hier zu Ende."
